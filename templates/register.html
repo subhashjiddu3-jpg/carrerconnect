@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CareerConnect Registration</title>
+</head>
+<body>
+
+    <h1>CareerConnect</h1>
+    <h2>Student Registration</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account?
+        <a href="/login/">Login here</a>
+    </p>
+
+</body>
+</html>

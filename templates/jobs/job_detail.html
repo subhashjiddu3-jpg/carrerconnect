@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details | CareerConnect</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #1d4ed8;
+        }
+
+        .details {
+            line-height: 2;
+            margin-top: 25px;
+        }
+
+        .description {
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>{{ job.title }}</h1>
+
+    <h3>{{ job.company_name }}</h3>
+
+    <div class="details">
+        <p><strong>Location:</strong> {{ job.location }}</p>
+
+        <p><strong>Job Type:</strong> {{ job.job_type }}</p>
+
+        <p><strong>Salary:</strong> {{ job.salary }}</p>
+    </div>
+
+    <hr>
+
+    <h2>Job Description</h2>
+
+    <p class="description">{{ job.description }}</p>
+
+    <h2>Requirements</h2>
+
+    <p class="description">{{ job.requirements }}</p>
+
+    <a href="{% url 'apply_job' job.id %}" class="btn">
+        Apply Now
+    </a>
+
+    <br>
+
+    <a href="{% url 'job_list' %}" class="back">
+        ← Back to Jobs
+    </a>
+
+</div>
+
+</body>
+</html>

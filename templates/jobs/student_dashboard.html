@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard - CareerConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #263247;
+        }
+
+        nav {
+            background: #172b4d;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        nav h2 {
+            color: white;
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .welcome {
+            background: #2457c5;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+
+        .card, .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0000000d;
+        }
+
+        .card h3 {
+            color: #68758a;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #2457c5;
+        }
+
+        .section {
+            margin-bottom: 22px;
+        }
+
+        .item {
+            border-bottom: 1px solid #eee;
+            padding: 14px 0;
+        }
+
+        .item:last-child {
+            border-bottom: 0;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+        .links a, .action-button {
+            display: inline-block;
+            background: #2457c5;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .progress-background {
+            background: #e2e8f0;
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #16a34a;
+            height: 20px;
+            border-radius: 10px;
+            transition: width 0.4s;
+        }
+
+        .completion-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 18px 0;
+        }
+
+        .completion-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2457c5;
+        }
+
+        .missing-box {
+            background: #fff7ed;
+            border-left: 5px solid #f97316;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .missing-box ul {
+            line-height: 1.9;
+        }
+
+        .complete-box {
+            background: #f0fdf4;
+            border-left: 5px solid #16a34a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 18px;
+        }
+
+        .complete-message {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #68758a;
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                width: 94%;
+            }
+
+            nav a {
+                margin-left: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>CareerConnect</h2>
+
+    <div>
+        <a href="{% url 'student_dashboard' %}">Dashboard</a>
+        <a href="{% url 'job_list' %}">Browse Jobs</a>
+        <a href="{% url 'my_applications' %}">My Applications</a>
+        <a href="{% url 'student_notifications' %}">Notifications</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Welcome Section -->
+    <div class="welcome">
+        <h1>Student Dashboard</h1>
+        <p>Welcome! Track your job applications and find new opportunities.</p>
+    </div>
+
+    <!-- Application Statistics -->
+    <div class="stats">
+
+        <div class="card">
+            <h3>Total Applications</h3>
+            <div class="number">{{ total_applications }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Pending</h3>
+            <div class="number">{{ pending_applications }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Shortlisted</h3>
+            <div class="number">{{ shortlisted_applications }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Selected</h3>
+            <div class="number">{{ selected_applications }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Rejected</h3>
+            <div class="number">{{ rejected_applications }}</div>
+        </div>
+
+    </div>
+
+    <!-- Student Profile -->
+    <div class="section">
+
+        <h2>My Student Profile</h2>
+
+        {% if student_profile %}
+
+            <!-- Profile Completion System -->
+            <div class="completion-box">
+
+                <h3>Profile Completion</h3>
+
+                <div class="completion-number">
+                    {{ profile_completion }}%
+                </div>
+
+                <div class="progress-background">
+                    <div class="progress-fill"
+                         style="width: {{ profile_completion }}%;">
+                    </div>
+                </div>
+
+                {% if profile_completion == 100 %}
+
+                    <div class="complete-box">
+                        <p class="complete-message">
+                            Excellent! Your profile is 100% complete.
+                        </p>
+                    </div>
+
+                {% else %}
+
+                    <div class="missing-box">
+
+                        <h3>Complete Your Profile</h3>
+
+                        <p>Please update the following missing information:</p>
+
+                        <ul>
+                            {% for field in missing_fields %}
+                                <li>{{ field }}</li>
+                            {% empty %}
+                                <li>No missing information.</li>
+                            {% endfor %}
+                        </ul>
+
+                        <a href="{% url 'edit_profile' %}"
+                           class="action-button">
+                            Complete My Profile
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- Profile Picture -->
+            {% if student_profile.profile_picture %}
+                <img
+                    src="{{ student_profile.profile_picture.url }}"
+                    alt="Student Profile Picture"
+                    class="profile-picture"
+                >
+            {% endif %}
+
+            <p>
+                <strong>Name:</strong>
+                {{ student_profile.full_name }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ student_profile.phone }}
+            </p>
+
+            <p>
+                <strong>Location:</strong>
+                {{ student_profile.location }}
+            </p>
+
+            <p>
+                <strong>Education:</strong>
+                {{ student_profile.education }}
+            </p>
+
+            <p>
+                <strong>Skills:</strong>
+                {{ student_profile.skills }}
+            </p>
+
+            <!-- Resume -->
+            {% if student_profile.resume %}
+                <p>
+                    <a href="{{ student_profile.resume.url }}"
+                       target="_blank">
+                        View / Download Resume
+                    </a>
+                </p>
+            {% else %}
+                <p>No resume uploaded yet.</p>
+            {% endif %}
+
+            <a href="{% url 'edit_profile' %}"
+               class="action-button">
+                Edit My Profile
+            </a>
+
+        {% else %}
+
+            <div class="missing-box">
+                <h3>Profile Not Created</h3>
+                <p>Create your student profile to start tracking your profile completion.</p>
+
+                <a href="{% url 'create_profile' %}"
+                   class="action-button">
+                    Create My Profile
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section links">
+
+        <h2>Quick Actions</h2>
+
+        <a href="{% url 'job_list' %}">Browse Jobs</a>
+        <a href="{% url 'my_applications' %}">My Applications</a>
+        <a href="{% url 'student_notifications' %}">Notifications</a>
+        <a href="{% url 'edit_profile' %}">Edit Profile</a>
+
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="section">
+
+        <h2>Recent Applications</h2>
+
+        {% for application in recent_applications %}
+
+            <div class="item">
+
+                <strong>{{ application.job.title }}</strong>
+
+                <p>Company: {{ application.job.company_name }}</p>
+
+                <p>Applied: {{ application.applied_at }}</p>
+
+                <p>
+                    Status:
+                    <span class="status">{{ application.status }}</span>
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <p>You have not applied for any jobs yet.</p>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Recent Notifications -->
+    <div class="section">
+
+        <h2>Recent Notifications</h2>
+
+        {% for notification in notifications %}
+
+            <div class="item">
+                {{ notification.message }}
+                <br>
+                <small>{{ notification.created_at }}</small>
+            </div>
+
+        {% empty %}
+
+            <p>No notifications available.</p>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Available Jobs -->
+    <div class="section">
+
+        <h2>Latest Available Jobs</h2>
+
+        {% for job in available_jobs %}
+
+            <div class="item">
+
+                <strong>{{ job.title }}</strong>
+
+                <p>Company: {{ job.company_name }}</p>
+                <p>Location: {{ job.location }}</p>
+                <p>Job Type: {{ job.job_type }}</p>
+
+                <a href="{% url 'job_detail' job.id %}">
+                    View Job
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <p>No jobs are available right now.</p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<footer>
+    CareerConnect - Student Dashboard
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,644 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Analytics - CareerConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 35px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header p {
+            color: #cbd5e1;
+            margin-bottom: 0;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1250px;
+            margin: 30px auto;
+        }
+
+        .section-title {
+            margin: 30px 0 18px;
+            color: #172554;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card,
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card {
+            border-left: 5px solid #2563eb;
+        }
+
+        .stat-card h3 {
+            margin: 0 0 12px;
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .card {
+            margin-top: 22px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #172554;
+        }
+
+        .analytics-item {
+            margin: 22px 0;
+        }
+
+        .analytics-label {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .progress {
+            background: #e2e8f0;
+            height: 18px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 18px;
+            border-radius: 20px;
+        }
+
+        .green {
+            background: #16a34a;
+        }
+
+        .blue {
+            background: #2563eb;
+        }
+
+        .orange {
+            background: #f59e0b;
+        }
+
+        .red {
+            background: #dc2626;
+        }
+
+        .purple {
+            background: #7c3aed;
+        }
+
+        .student-item {
+            padding: 17px 5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .student-item:last-child {
+            border-bottom: none;
+        }
+
+        .student-item h3 {
+            margin: 0 0 8px;
+            color: #1d4ed8;
+        }
+
+        .student-item p {
+            margin: 5px 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .empty {
+            color: #64748b;
+            padding: 12px 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-dark {
+            background: #172554;
+        }
+
+        .btn-dark:hover {
+            background: #1e40af;
+        }
+
+        .btn-red {
+            background: #dc2626;
+        }
+
+        .btn-red:hover {
+            background: #b91c1c;
+        }
+
+        /* Excel Button */
+        .btn-excel {
+            background: #15803d;
+        }
+
+        .btn-excel:hover {
+            background: #166534;
+        }
+
+        .month-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .month-name {
+            width: 125px;
+            min-width: 125px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .month-bar {
+            flex: 1;
+            background: #e2e8f0;
+            height: 25px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .month-fill {
+            height: 100%;
+            border-radius: 20px;
+            min-width: 0;
+        }
+
+        .month-count {
+            width: 35px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #172554;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 45px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .month-row {
+                gap: 8px;
+            }
+
+            .month-name {
+                width: 90px;
+                min-width: 90px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>CareerConnect Admin Analytics</h1>
+        <p>Complete Platform Statistics and Reports</p>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- PLATFORM OVERVIEW -->
+
+    <h2 class="section-title">Platform Overview</h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>Total Students</h3>
+            <div class="number">{{ total_students }}</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Companies</h3>
+            <div class="number">{{ total_companies }}</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Jobs</h3>
+            <div class="number">{{ total_jobs }}</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Applications</h3>
+            <div class="number">{{ total_applications }}</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Selected Candidates</h3>
+            <div class="number">{{ selected_applications }}</div>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending Applications</h3>
+            <div class="number">{{ pending_applications }}</div>
+        </div>
+
+    </div>
+
+
+    <!-- APPLICATION ANALYTICS -->
+
+    <h2 class="section-title">Application Analytics</h2>
+
+    <div class="card">
+
+        <h2>Application Status Overview</h2>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Pending</span>
+                <strong>{{ pending_applications }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill orange"
+                     style="width: {% if total_applications %}{% widthratio pending_applications total_applications 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Shortlisted</span>
+                <strong>{{ shortlisted_applications }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill blue"
+                     style="width: {% if total_applications %}{% widthratio shortlisted_applications total_applications 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Selected</span>
+                <strong>{{ selected_applications }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill green"
+                     style="width: {% if total_applications %}{% widthratio selected_applications total_applications 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Rejected</span>
+                <strong>{{ rejected_applications }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill red"
+                     style="width: {% if total_applications %}{% widthratio rejected_applications total_applications 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- JOB ANALYTICS -->
+
+    <h2 class="section-title">Jobs Analytics</h2>
+
+    <div class="card">
+
+        <h2>Jobs Analytics Overview</h2>
+
+        <h3>Total Jobs: {{ total_jobs }}</h3>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Active Jobs</span>
+                <strong>{{ active_jobs }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill green"
+                     style="width: {% if total_jobs %}{% widthratio active_jobs total_jobs 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-item">
+            <div class="analytics-label">
+                <span>Inactive Jobs</span>
+                <strong>{{ inactive_jobs }}</strong>
+            </div>
+            <div class="progress">
+                <div class="progress-fill red"
+                     style="width: {% if total_jobs %}{% widthratio inactive_jobs total_jobs 100 %}{% else %}0{% endif %}%;">
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3>Job Type Distribution</h3>
+
+        <p>Full Time: <strong>{{ full_time_jobs }}</strong></p>
+        <p>Part Time: <strong>{{ part_time_jobs }}</strong></p>
+        <p>Internship: <strong>{{ internship_jobs }}</strong></p>
+        <p>Remote: <strong>{{ remote_jobs }}</strong></p>
+
+    </div>
+
+
+    <!-- MONTHLY STUDENT REGISTRATIONS -->
+
+    <h2 class="section-title">Monthly Analytics</h2>
+
+    <div class="card">
+
+        <h2>Monthly Student Registrations</h2>
+
+        {% for item in monthly_student_registrations %}
+
+            <div class="month-row">
+
+                <div class="month-name">
+                    {{ item.month_label }}
+                </div>
+
+                <div class="month-bar">
+                    <div class="month-fill blue"
+                         style="width: {{ item.percentage }}%;">
+                    </div>
+                </div>
+
+                <div class="month-count">
+                    {{ item.total }}
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty">
+                No monthly student registration data available.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- MONTHLY JOB APPLICATIONS -->
+
+    <div class="card">
+
+        <h2>Monthly Job Applications</h2>
+
+        {% for item in monthly_job_applications %}
+
+            <div class="month-row">
+
+                <div class="month-name">
+                    {{ item.month_label }}
+                </div>
+
+                <div class="month-bar">
+                    <div class="month-fill green"
+                         style="width: {{ item.percentage }}%;">
+                    </div>
+                </div>
+
+                <div class="month-count">
+                    {{ item.total }}
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty">
+                No monthly job application data available.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- STUDENT EDUCATION ANALYTICS -->
+
+    <h2 class="section-title">Student Analytics</h2>
+
+    <div class="card">
+
+        <h2>Student Education Analytics</h2>
+
+        {% for item in education_stats %}
+
+            <div class="analytics-item">
+
+                <div class="analytics-label">
+                    <span>{{ item.education|default:"Not specified" }}</span>
+                    <strong>{{ item.total }} students</strong>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-fill blue"
+                         style="width: {% if total_students %}{% widthratio item.total total_students 100 %}{% else %}0{% endif %}%;">
+                    </div>
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty">
+                No student education records available.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- STUDENT LOCATION ANALYTICS -->
+
+    <div class="card">
+
+        <h2>Student Location Analytics</h2>
+
+        {% for item in location_stats %}
+
+            <div class="analytics-item">
+
+                <div class="analytics-label">
+                    <span>{{ item.location|default:"Not specified" }}</span>
+                    <strong>{{ item.total }} students</strong>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-fill green"
+                         style="width: {% if total_students %}{% widthratio item.total total_students 100 %}{% else %}0{% endif %}%;">
+                    </div>
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty">
+                No student location records available.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- RECENT STUDENT REGISTRATIONS -->
+
+    <div class="card">
+
+        <h2>Recent Student Registrations</h2>
+
+        {% for student in recent_students %}
+
+            <div class="student-item">
+
+                <h3>{{ student.full_name }}</h3>
+
+                <p>
+                    Username: {{ student.user.username }}
+                </p>
+
+                <p>
+                    Education: {{ student.education }}
+                </p>
+
+                <p>
+                    Location: {{ student.location }}
+                </p>
+
+                <p>
+                    Registered: {{ student.created_at|date:"d M Y" }}
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty">
+                No student registrations found.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- DASHBOARD ACTIONS -->
+
+    <div class="actions">
+
+        <a href="/admin/" class="btn btn-dark">
+            Django Admin
+        </a>
+
+        <a href="/jobs/" class="btn">
+            Browse Jobs
+        </a>
+
+        <a href="{% url 'download_analytics_pdf' %}" class="btn btn-red">
+            Download PDF Report
+        </a>
+
+        <a href="{% url 'download_analytics_excel' %}" class="btn btn-excel">
+            Download Excel Report
+        </a>
+
+    </div>
+
+</div>
+
+<footer>
+    <p>CareerConnect Admin Analytics Dashboard</p>
+    <p>© 2026 CareerConnect. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

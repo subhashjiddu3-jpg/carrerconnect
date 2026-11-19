@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerConnect - Company Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #263247;
+        }
+        nav {
+            background: #172b4d;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        nav h2 { color: white; margin: 0; }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+        .container { width: 86%; max-width: 1200px; margin: 30px auto; }
+        .welcome {
+            background: #2457c5;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        .welcome h1 { margin-top: 0; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin: 25px 0;
+        }
+        .card, .section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0000000d;
+        }
+        .card h3 { color: #68758a; margin-top: 0; }
+        .number { font-size: 30px; font-weight: bold; color: #2457c5; }
+        .section { margin-bottom: 22px; }
+        .section h2 { margin-top: 0; }
+        .links a {
+            display: inline-block;
+            background: #2457c5;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin: 5px;
+        }
+        .item {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+        }
+        .item:last-child { border-bottom: 0; }
+        .status { font-weight: bold; }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #68758a;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <h2>CareerConnect</h2>
+    <div>
+        <a href="{% url 'company_dashboard' %}">Dashboard</a>
+        <a href="{% url 'post_job' %}">Post Job</a>
+        <a href="{% url 'company_applications' %}">Applications</a>
+        <a href="{% url 'company_profile' %}">Company Profile</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="welcome">
+        <h1>Company Dashboard</h1>
+        <p>Welcome! Manage your jobs and applications here.</p>
+    </div>
+
+    <div class="stats">
+        <div class="card">
+            <h3>Total Jobs</h3>
+            <div class="number">{{ total_jobs }}</div>
+        </div>
+        <div class="card">
+            <h3>Active Jobs</h3>
+            <div class="number">{{ active_jobs }}</div>
+        </div>
+        <div class="card">
+            <h3>Total Applications</h3>
+            <div class="number">{{ total_applications }}</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Application Overview</h2>
+        <p>Pending: {{ pending_applications }}</p>
+        <p>Shortlisted: {{ shortlisted_applications }}</p>
+        <p>Selected: {{ selected_applications }}</p>
+        <p>Rejected: {{ rejected_applications }}</p>
+    </div>
+
+    <div class="section links">
+        <h2>Quick Actions</h2>
+        <a href="{% url 'post_job' %}">Post a New Job</a>
+        <a href="{% url 'company_applications' %}">View Applications</a>
+        <a href="{% url 'company_profile' %}">Edit Company Profile</a>
+        <a href="{% url 'company_analytics' %}">
+    View Company Analytics
+</a>
+    </div>
+
+    <div class="section">
+        <h2>Recent Jobs</h2>
+        {% for job in recent_jobs %}
+            <div class="item">
+                <strong>{{ job.title }}</strong><br>
+                {{ job.location }} | {{ job.job_type }}<br>
+                Status: {% if job.is_active %}Active{% else %}Inactive{% endif %}
+                <a href="{% url 'edit_job' job.id %}">Edit Job</a>
+                <a href="{% url 'delete_job' job.id %}">Delete Job</a>
+            </div>
+        {% empty %}
+            <p>You have not posted any jobs yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>Recent Applications</h2>
+        {% for application in recent_applications %}
+            <div class="item">
+                <strong>{{ application.student.username }}</strong><br>
+                Job: {{ application.job.title }}<br>
+                Applied: {{ application.applied_at }}<br>
+                Status: <span class="status">{{ application.status }}</span>
+            </div>
+        {% empty %}
+            <p>No applications received yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<footer>CareerConnect - Company Dashboard</footer>
+
+</body>
+</html>
+

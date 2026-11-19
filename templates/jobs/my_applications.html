@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications | CareerConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fc;
+            color: #26344a;
+        }
+
+        header {
+            background: #173b70;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+            color: white;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #173b70;
+        }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .stat-card h2 {
+            font-size: 30px;
+            margin: 5px;
+        }
+
+        .stat-card p {
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        .application-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+            border-left: 5px solid #173b70;
+        }
+
+        .application-card h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .application-id {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            line-height: 2;
+            color: #64748b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .shortlisted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .selected {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .unknown {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .application-actions {
+            margin-top: 18px;
+        }
+
+        .view-button {
+            display: inline-block;
+            background: #173b70;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .view-button:hover {
+            background: #24549a;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #173b70;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 0 7px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .application-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+
+<header>
+
+    <h2>CareerConnect</h2>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="{% url 'job_list' %}">Available Jobs</a>
+        <a href="{% url 'student_dashboard' %}">Dashboard</a>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <!-- Page Heading -->
+
+    <h1>My Job Applications</h1>
+
+    <p>
+        Track the status of your submitted job applications.
+    </p>
+
+    <!-- Application Statistics -->
+
+    <div class="statistics">
+
+        <div class="stat-card">
+            <p>Total Applications</p>
+            <h2>{{ total_applications }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Pending</p>
+            <h2>{{ pending_applications }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Shortlisted</p>
+            <h2>{{ shortlisted_applications }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Rejected</p>
+            <h2>{{ rejected_applications }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Selected</p>
+            <h2>{{ selected_applications }}</h2>
+        </div>
+
+    </div>
+
+    <!-- Application List -->
+
+    <h2>Application History</h2>
+
+    {% for application in applications %}
+
+    <div class="application-card">
+
+        <!-- Application ID -->
+
+        <div class="application-id">
+            Application ID: #{{ application.id }}
+        </div>
+
+        <!-- Job Title -->
+
+        <h2>{{ application.job.title }}</h2>
+
+        <!-- Application Details -->
+
+        <div class="details">
+
+            <strong>Company:</strong>
+            {{ application.job.company_name }}<br>
+
+            <strong>Location:</strong>
+            {{ application.job.location }}<br>
+
+            <strong>Job Type:</strong>
+            {{ application.job.job_type }}<br>
+
+            <strong>Salary:</strong>
+            {{ application.job.salary }}<br>
+
+            <strong>Applied Date:</strong>
+            {{ application.applied_at|date:"d M Y" }}<br>
+
+            <strong>Applied Time:</strong>
+            {{ application.applied_at|date:"h:i A" }}<br>
+
+            <strong>Application Status:</strong>
+
+            {% if application.status == "Pending" %}
+
+                <span class="status pending">
+                    Pending
+                </span>
+
+            {% elif application.status == "Shortlisted" %}
+
+                <span class="status shortlisted">
+                    Shortlisted
+                </span>
+
+            {% elif application.status == "Rejected" %}
+
+                <span class="status rejected">
+                    Rejected
+                </span>
+
+            {% elif application.status == "Selected" %}
+
+                <span class="status selected">
+                    Selected
+                </span>
+
+            {% else %}
+
+                <span class="status unknown">
+                    {{ application.status }}
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        <!-- Application Actions -->
+
+        <div class="application-actions">
+
+            <a
+                href="{% url 'job_detail' application.job.id %}"
+                class="view-button"
+            >
+                View Job Details
+            </a>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <!-- No Applications -->
+
+    <div class="empty">
+
+        <h2>No Applications Found</h2>
+
+        <p>
+            You have not applied for any jobs yet.
+        </p>
+
+        <a
+            href="{% url 'job_list' %}"
+            class="view-button"
+        >
+            Browse Available Jobs
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+    <!-- Back Link -->
+
+    <a class="back-link" href="{% url 'student_dashboard' %}">
+        ← Back to Student Dashboard
+    </a>
+
+</div>
+
+<footer>
+    <p>CareerConnect - Your Career, Your Future</p>
+</footer>
+
+</body>
+</html>

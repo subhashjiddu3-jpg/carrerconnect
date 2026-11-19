@@ -1,0 +1,490 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Available Jobs | CareerConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fc;
+            color: #26344a;
+        }
+
+        header {
+            background: #173b70;
+            color: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 45px 15px;
+        }
+
+        .hero h1 {
+            color: #173b70;
+            margin-bottom: 10px;
+        }
+
+        .jobs-container {
+            max-width: 900px;
+            margin: auto;
+            padding: 10px 20px 50px;
+        }
+
+        /* Search and Filter Section */
+
+        .filter-box {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .filter-box h2 {
+            color: #173b70;
+            margin-top: 0;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .filter-form input,
+        .filter-form select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .filter-form input:focus,
+        .filter-form select:focus {
+            outline: none;
+            border-color: #173b70;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+            align-items: center;
+        }
+
+        .search-button {
+            background: #173b70;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .search-button:hover {
+            background: #24549a;
+        }
+
+        .clear-button {
+            background: #e2e8f0;
+            color: #26344a;
+            padding: 12px 22px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .clear-button:hover {
+            background: #cbd5e1;
+        }
+
+        /* Job Cards */
+
+        .job-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .company-heading {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .company-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f1f5f9;
+            padding: 5px;
+        }
+
+        .company-heading h2 {
+            color: #173b70;
+            margin: 0 0 8px;
+        }
+
+        .company-name {
+            color: #475569;
+        }
+
+        .details {
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .description {
+            line-height: 1.6;
+        }
+
+        /* Empty Results */
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+        }
+
+        /* Action Buttons */
+
+        .post-link {
+            display: inline-block;
+            background: #173b70;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 10px;
+            margin-right: 8px;
+        }
+
+        .post-link:hover {
+            background: #24549a;
+        }
+
+        .company-link {
+            background: #0f766e;
+        }
+
+        .company-link:hover {
+            background: #115e59;
+        }
+
+        .details-link {
+            background: #475569;
+        }
+
+        .details-link:hover {
+            background: #334155;
+        }
+
+        /* Mobile Responsive Design */
+
+        @media (max-width: 650px) {
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav a {
+                margin: 0 7px;
+            }
+
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-button,
+            .clear-button {
+                text-align: center;
+            }
+
+            .company-heading {
+                align-items: flex-start;
+            }
+
+            .post-link {
+                margin-right: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Header -->
+
+<header>
+
+    <h2>CareerConnect</h2>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/jobs/">Available Jobs</a>
+        <a href="/jobs/post/">Post a Job</a>
+    </nav>
+
+</header>
+
+<!-- Hero Section -->
+
+<section class="hero">
+
+    <h1>Find Your Dream Job</h1>
+
+    <p>
+        Explore opportunities and take the next step in your career.
+    </p>
+
+</section>
+
+<div class="jobs-container">
+
+    <!-- Job Search and Filters -->
+
+    <div class="filter-box">
+
+        <h2>Search and Filter Jobs</h2>
+
+        <form method="GET" action="{% url 'job_list' %}">
+
+            <div class="filter-form">
+
+                <!-- Search by Job Title -->
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search by job title"
+                    value="{{ search_query }}"
+                >
+
+                <!-- Filter by Location -->
+
+                <input
+                    type="text"
+                    name="location"
+                    placeholder="Enter location"
+                    value="{{ location }}"
+                >
+
+                <!-- Filter by Job Type -->
+
+                <select name="job_type">
+
+                    <option value="">All Job Types</option>
+
+                    <option value="Full Time"
+                        {% if selected_job_type == "Full Time" %}selected{% endif %}>
+                        Full Time
+                    </option>
+
+                    <option value="Part Time"
+                        {% if selected_job_type == "Part Time" %}selected{% endif %}>
+                        Part Time
+                    </option>
+
+                    <option value="Internship"
+                        {% if selected_job_type == "Internship" %}selected{% endif %}>
+                        Internship
+                    </option>
+
+                    <option value="Remote"
+                        {% if selected_job_type == "Remote" %}selected{% endif %}>
+                        Remote
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Search and Clear Buttons -->
+
+            <div class="filter-actions">
+
+                <button type="submit" class="search-button">
+                    Search Jobs
+                </button>
+
+                <a href="{% url 'job_list' %}" class="clear-button">
+                    Clear Filters
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Job Listings -->
+
+    {% for job in jobs %}
+
+    <div class="job-card">
+
+        <!-- Company Logo and Job Title -->
+
+        <div class="company-heading">
+
+            {% if job.company.company_profile.logo %}
+
+                <img
+                    src="{{ job.company.company_profile.logo.url }}"
+                    alt="Company Logo"
+                    class="company-logo"
+                >
+
+            {% endif %}
+
+            <div>
+
+                <h2>{{ job.title }}</h2>
+
+                {% if job.company.company_profile %}
+
+                    <strong class="company-name">
+                        {{ job.company.company_profile.company_name }}
+                    </strong>
+
+                {% else %}
+
+                    <strong class="company-name">
+                        {{ job.company_name }}
+                    </strong>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- Job Details -->
+
+        <div class="details">
+
+            <strong>Company:</strong>
+            {{ job.company_name }}<br>
+
+            <strong>Location:</strong>
+            {{ job.location }}<br>
+
+            <strong>Job Type:</strong>
+            {{ job.job_type }}<br>
+
+            <strong>Salary:</strong>
+            {{ job.salary }}
+
+        </div>
+
+        <!-- Job Description -->
+
+        <h3>Job Description</h3>
+
+        <p class="description">
+            {{ job.description }}
+        </p>
+
+        <!-- Job Requirements -->
+
+        <h3>Requirements</h3>
+
+        <p class="description">
+            {{ job.requirements }}
+        </p>
+
+        <!-- Action Buttons -->
+
+        <a
+            class="post-link"
+            href="{% url 'apply_job' job.id %}"
+        >
+            Apply Now
+        </a>
+
+        <a
+            class="post-link details-link"
+            href="{% url 'job_detail' job.id %}"
+        >
+            View Details
+        </a>
+
+        {% if job.company.company_profile %}
+
+            <a
+                class="post-link company-link"
+                href="{% url 'company_profile_detail' job.company.company_profile.id %}"
+            >
+                View Company
+            </a>
+
+        {% endif %}
+
+    </div>
+
+    {% empty %}
+
+    <!-- No Jobs Found -->
+
+    <div class="empty">
+
+        <h2>No Matching Jobs Found</h2>
+
+        <p>Try changing your search or filters.</p>
+
+        <a
+            class="post-link"
+            href="{% url 'job_list' %}"
+        >
+            View All Jobs
+        </a>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

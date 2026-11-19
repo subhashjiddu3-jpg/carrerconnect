@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Notifications - CareerConnect</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stats {
+            background: white;
+            padding: 18px;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .notification-card {
+            background: white;
+            padding: 20px;
+            margin-top: 18px;
+            border-radius: 10px;
+            border-left: 5px solid #2563eb;
+        }
+
+        .unread {
+            border-left-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .read {
+            border-left-color: #94a3b8;
+        }
+
+        .date {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .read-badge {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        button, .btn {
+            border: none;
+            padding: 10px 15px;
+            margin: 5px 5px 0 0;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 13px;
+        }
+
+        .mark-btn {
+            background: #16a34a;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+        }
+
+        .all-btn {
+            background: #0f172a;
+        }
+
+        .back-btn {
+            background: #2563eb;
+        }
+
+        .empty {
+            background: white;
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .actions {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        form {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>CareerConnect</h1>
+        <h2>My Notifications</h2>
+        <p>Stay updated about your job applications.</p>
+    </div>
+
+    <div class="stats">
+        <h3>Unread Notifications: {{ unread_count }}</h3>
+    </div>
+
+    {% if unread_count > 0 %}
+        <div class="actions">
+            <form method="POST" action="{% url 'mark_all_notifications_read' %}">
+                {% csrf_token %}
+                <button type="submit" class="all-btn">
+                    Mark All as Read
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% for notification in notifications %}
+
+        <div class="notification-card
+            {% if notification.is_read %}read{% else %}unread{% endif %}">
+
+            <p><strong>{{ notification.message }}</strong></p>
+
+            <p class="date">
+                {{ notification.created_at|date:"d M Y, h:i A" }}
+            </p>
+
+            {% if notification.is_read %}
+                <span class="badge read-badge">Read</span>
+            {% else %}
+                <span class="badge">Unread</span>
+
+                <form method="POST"
+                      action="{% url 'mark_notification_read' notification.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="mark-btn">
+                        Mark as Read
+                    </button>
+                </form>
+            {% endif %}
+
+            <form method="POST"
+                  action="{% url 'delete_notification' notification.id %}"
+                  onsubmit="return confirm('Delete this notification?');">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">
+                    Delete
+                </button>
+            </form>
+
+        </div>
+
+    {% empty %}
+
+        <div class="empty">
+            <h3>No Notifications Yet</h3>
+            <p>You will see application updates here.</p>
+        </div>
+
+    {% endfor %}
+
+    <div class="actions">
+        <a href="{% url 'dashboard' %}" class="btn back-btn">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

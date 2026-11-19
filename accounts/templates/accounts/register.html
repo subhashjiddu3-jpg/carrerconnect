@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CareerConnect Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #ccc;
+        }
+
+        h1 {
+            color: #2563eb;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .errorlist {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>CareerConnect</h1>
+    <h2>Create Your Account</h2>
+
+    <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <p>Already have an account?
+        <a href="{% url 'login' %}">Login here</a>
+    </p>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Company Performance - CareerConnect</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #172554;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 320px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .pdf {
+            background: #dc2626;
+        }
+
+        .excel {
+            background: #15803d;
+        }
+
+        .back {
+            background: #2563eb;
+        }
+
+        .button:hover {
+            opacity: 0.85;
+        }
+
+        @media(max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .chart-container {
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Company Performance Dashboard</h1>
+
+    <p class="subtitle">
+        Track your monthly job postings and application trends.
+    </p>
+
+    <div class="chart-card">
+        <h2>Monthly Jobs Posted</h2>
+        <div class="chart-container">
+            <canvas id="jobsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h2>Monthly Applications Received</h2>
+        <div class="chart-container">
+            <canvas id="applicationsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="buttons">
+
+        <a href="{% url 'download_company_performance_pdf' %}"
+           class="button pdf">
+            Download Performance PDF
+        </a>
+
+        <a href="{% url 'download_company_performance_excel' %}"
+           class="button excel">
+            Download Performance Excel
+        </a>
+
+        <a href="{% url 'company_analytics' %}"
+           class="button back">
+            Back to Company Analytics
+        </a>
+
+    </div>
+
+</div>
+
+{{ monthly_jobs|json_script:"jobs-data" }}
+{{ monthly_applications|json_script:"applications-data" }}
+
+<script>
+
+    const jobsData = JSON.parse(
+        document.getElementById("jobs-data").textContent
+    );
+
+    const applicationsData = JSON.parse(
+        document.getElementById("applications-data").textContent
+    );
+
+    const jobLabels = jobsData.map(item => item.month);
+    const jobTotals = jobsData.map(item => item.total);
+
+    const applicationLabels = applicationsData.map(item => item.month);
+    const applicationTotals = applicationsData.map(item => item.total);
+
+    new Chart(document.getElementById("jobsChart"), {
+        type: "bar",
+
+        data: {
+            labels: jobLabels,
+
+            datasets: [{
+                label: "Jobs Posted",
+                data: jobTotals,
+                backgroundColor: "#2563eb",
+                borderRadius: 6
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById("applicationsChart"), {
+        type: "line",
+
+        data: {
+            labels: applicationLabels,
+
+            datasets: [{
+                label: "Applications Received",
+                data: applicationTotals,
+                borderColor: "#16a34a",
+                backgroundColor: "rgba(22,163,74,0.15)",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

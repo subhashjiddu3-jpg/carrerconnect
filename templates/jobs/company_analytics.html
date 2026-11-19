@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Analytics - CareerConnect</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #172554;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            border-left: 5px solid #2563eb;
+        }
+
+        .card h3 {
+            margin: 0 0 15px;
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .selected {
+            border-left-color: #16a34a;
+        }
+
+        .pending {
+            border-left-color: #d97706;
+        }
+
+        .shortlisted {
+            border-left-color: #7c3aed;
+        }
+
+        .rejected {
+            border-left-color: #dc2626;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 22px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .back-button:hover {
+            background: #1d4ed8;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Company Analytics Dashboard</h1>
+    <p class="subtitle">
+        Track your jobs and application performance.
+    </p>
+
+    <div class="analytics-grid">
+
+        <div class="card">
+            <h3>Total Jobs Posted</h3>
+            <div class="number">{{ total_jobs }}</div>
+        </div>
+
+        <div class="card">
+            <h3>Total Applications</h3>
+            <div class="number">{{ total_applications }}</div>
+        </div>
+
+        <div class="card selected">
+            <h3>Selected Candidates</h3>
+            <div class="number">{{ selected_applications }}</div>
+        </div>
+
+        <div class="card pending">
+            <h3>Pending Applications</h3>
+            <div class="number">{{ pending_applications }}</div>
+        </div>
+
+        <div class="card shortlisted">
+            <h3>Shortlisted Candidates</h3>
+            <div class="number">{{ shortlisted_applications }}</div>
+        </div>
+
+        <div class="card rejected">
+            <h3>Rejected Applications</h3>
+            <div class="number">{{ rejected_applications }}</div>
+        </div>
+
+    </div>
+
+    <a href="{% url 'company_dashboard' %}" class="back-button">
+        Back to Company Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>
