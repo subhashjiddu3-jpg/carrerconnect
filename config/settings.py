@@ -1,14 +1,15 @@
-from pathlib import Path
+
 from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
 
-# SECURITY WARNING:
-# Keep your original SECRET_KEY from your existing settings.py
+
+# Security settings
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
     'django-insecure-local-development-key'
@@ -16,15 +17,23 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get(
-    'ALLOWED_HOSTS',
-    '127.0.0.1,localhost'
-).split(',')
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        'ALLOWED_HOSTS',
+        '127.0.0.1,localhost'
+    ).split(',')
+    if host.strip()
+]
+
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',')
+    for origin in os.environ.get(
+        'CSRF_TRUSTED_ORIGINS', ''
+    ).split(',')
     if origin.strip()
 ]
+
 
 # Installed applications
 INSTALLED_APPS = [
@@ -35,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # CareerConnect applications
     'accounts',
     'profiles',
     'jobs',
@@ -55,11 +63,11 @@ MIDDLEWARE = [
 ]
 
 
-# Main URL configuration
+# URL configuration
 ROOT_URLCONF = 'config.urls'
 
 
-# Templates configuration
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,16 +85,18 @@ TEMPLATES = [
 ]
 
 
-# WSGI application
+# WSGI
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
+# Database
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
     )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -107,11 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Language and time zone
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Asia/Kolkata'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -126,34 +133,26 @@ STATICFILES_DIRS = [
 
 # Media files
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# Login and logout configuration
+# Login and logout
 LOGIN_URL = '/accounts/login/'
-
 LOGIN_REDIRECT_URL = '/accounts/dashboard/'
-
-LOGOUT_REDIRECT_URL = ('login')
-
+LOGOUT_REDIRECT_URL = 'login'
 
 
-# Gmail SMTP Configuration
-
+# Gmail SMTP configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 EMAIL_HOST = 'smtp.gmail.com'
-
 EMAIL_PORT = 587
-
 EMAIL_USE_TLS = True
-
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# File storage
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
