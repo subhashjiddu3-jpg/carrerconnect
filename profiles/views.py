@@ -1,5 +1,5 @@
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import StudentProfileForm
@@ -42,10 +42,11 @@ def create_profile(request):
 @login_required
 def view_profile(request):
 
-    profile = get_object_or_404(
-        StudentProfile,
-        user=request.user
-    )
+    # If profile does not exist, open profile creation page
+    if not hasattr(request.user, 'studentprofile'):
+        return redirect('create_profile')
+
+    profile = request.user.studentprofile
 
     return render(
         request,
@@ -57,10 +58,10 @@ def view_profile(request):
 @login_required
 def edit_profile(request):
 
-    profile = get_object_or_404(
-        StudentProfile,
-        user=request.user
-    )
+    if not hasattr(request.user, 'studentprofile'):
+        return redirect('create_profile')
+
+    profile = request.user.studentprofile
 
     if request.method == 'POST':
         form = StudentProfileForm(
